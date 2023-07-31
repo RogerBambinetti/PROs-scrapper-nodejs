@@ -43,7 +43,7 @@ async function init(){
             const json = await response.json();
             content.total = json.meta.totalCount;
 
-            const registeredSongs = json.result.map(r => r.workId +" "+ r.workTitle);
+            const registeredSongs = json.result.map(r => `${r.workId} ${r.workTitle}`);
             const arr = content.songs.concat(registeredSongs);
 
             content.songs = arr;
