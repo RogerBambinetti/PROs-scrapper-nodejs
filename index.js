@@ -102,6 +102,7 @@ async function sendSMS(message) {
 
 async function init() {
     await new Promise(getData);
+    process.exit();
 }
 
 init();
