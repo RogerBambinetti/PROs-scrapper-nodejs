@@ -52,6 +52,7 @@ async function getData(resolve) {
 
                 content.songs = arr;
                 console.log("Added content");
+                await addDelay();
                 if (json.meta.next) {
                     await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
                 } else {
