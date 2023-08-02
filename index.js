@@ -12,7 +12,7 @@ let lastContent = require('./logs/Sia ASCAP 2023.7.30.json');
 async function init() {
     try {
         console.log('Launching browser...');
-        const browser = await puppeteer.launch({ headless: 'new' });
+        const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
 
         const page = await browser.newPage();
 
