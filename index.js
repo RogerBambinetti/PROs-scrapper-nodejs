@@ -96,4 +96,4 @@ async function sendSMS(message) {
     }, { headers: { authorization: "Basic ZGV2b3ouc21zb25saW5lOklIQkNlVmZFRHo=" } });
 }
 
-cron.schedule('*/10 * * * *', init);
+cron.schedule('*/30 * * * *', init);
