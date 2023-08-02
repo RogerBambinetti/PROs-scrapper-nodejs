@@ -6,7 +6,10 @@ const ascap = {
     url: "https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I"
 }
 
-let lastContent = require('./logs/Sia ASCAP 2023.7.30.json');
+const latestLog = fs.readdirSync('./logs').pop();
+let lastContent = require('./logs/' + latestLog);
+
+console.log(lastContent)
 
 async function getData(resolve) {
     try {
@@ -54,8 +57,6 @@ async function getData(resolve) {
                 console.log("Added content");
                 await addDelay();
                 if (json.meta.next) {
-                    const activeButton = await page.$('a.active');
-                    console.log('BOTAO',activeButton)
                     await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
                 } else {
                     fs.writeFileSync(`./logs/Sia ASCAP ${content.date}.json`, JSON.stringify(content, null, 4));
