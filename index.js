@@ -1,3 +1,4 @@
+const axios = require('axios');
 const cron = require('node-cron');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
@@ -62,7 +63,8 @@ async function init() {
                         console.log("Count change detected", lastContent.total, content.total);
                         const diff = content.songs.filter(song => !lastContent.songs.includes(song));
 
-                        console.log("Detected diff:", diff)
+                        console.log("Detected diff:", diff);
+                        sendSMS(diff);
                     }
 
                     lastContent = content;
@@ -81,5 +83,17 @@ async function addDelay(seconds = 2) {
     return new Promise((resolve) => setTimeout(resolve, 1000 * seconds));
 }
 
+async function sendSMS(message) {
+    console.log('Sending SMS');
+
+    await axios.post('https://api-rest.zenvia.com/services/send-sms', {
+        sendSmsRequest: {
+            from: 'Song Tracker',
+            to: '+5547988380999',
+            msg: JSON.stringify(message),
+            flashSms: false
+        }
+    }, { headers: { authorization: "Basic ZGV2b3ouc21zb25saW5lOklIQkNlVmZFRHo=" } });
+}
 
 cron.schedule('* * * * *', init);
