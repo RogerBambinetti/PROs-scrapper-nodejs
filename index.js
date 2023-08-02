@@ -65,7 +65,7 @@ async function getData(resolve) {
                         const diff = content.songs.filter(song => !lastContent.songs.includes(song));
 
                         console.log("Detected diff:", diff);
-                        sendSMS(diff);
+                        //sendSMS(diff);
                     }
 
                     lastContent = content;
