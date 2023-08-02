@@ -101,9 +101,7 @@ async function sendSMS(message) {
 }
 
 async function init() {
-    do {
-        await new Promise(getData)
-    } while (true)
+    await new Promise(getData);
 }
 
 init();
