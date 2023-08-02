@@ -54,6 +54,8 @@ async function getData(resolve) {
                 console.log("Added content");
                 await addDelay();
                 if (json.meta.next) {
+                    const activeButton = await page.$('a.active');
+                    console.log('BOTAO',activeButton)
                     await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
                 } else {
                     fs.writeFileSync(`./logs/Sia ASCAP ${content.date}.json`, JSON.stringify(content, null, 4));
