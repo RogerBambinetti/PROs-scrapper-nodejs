@@ -9,8 +9,6 @@ const ascap = {
 const latestLog = fs.readdirSync('./logs').pop();
 let lastContent = require('./logs/' + latestLog);
 
-console.log(lastContent)
-
 async function getData(resolve) {
     try {
         console.log('Launching browser...');
@@ -101,6 +99,7 @@ async function sendSMS(message) {
         }
     }, { headers: { authorization: "Basic ZGV2b3ouc21zb25saW5lOklIQkNlVmZFRHo=" } });
 }
+
 async function init() {
     do {
         await new Promise(getData)
