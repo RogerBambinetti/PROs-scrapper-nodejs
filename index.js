@@ -1,5 +1,4 @@
 const axios = require('axios');
-const cron = require('node-cron');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
@@ -9,7 +8,7 @@ const ascap = {
 
 let lastContent = require('./logs/Sia ASCAP 2023.7.30.json');
 
-async function init() {
+async function getData(resolve) {
     try {
         console.log('Launching browser...');
         const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
@@ -68,6 +67,8 @@ async function init() {
                     }
 
                     lastContent = content;
+
+                    resolve();
                 }
             }
         });
@@ -76,6 +77,7 @@ async function init() {
         await button4.click();
     } catch (e) {
         console.log('An error occurred', e);
+        resolve();
     }
 }
 
@@ -95,5 +97,10 @@ async function sendSMS(message) {
         }
     }, { headers: { authorization: "Basic ZGV2b3ouc21zb25saW5lOklIQkNlVmZFRHo=" } });
 }
+async function init() {
+    do {
+        await new Promise(getData)
+    } while (true)
+}
 
-cron.schedule('*/30 * * * *', init);
+init();
