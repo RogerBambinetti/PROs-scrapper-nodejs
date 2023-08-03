@@ -46,6 +46,9 @@ async function getData(resolve) {
             songs: []
         };
 
+        const button4 = await page.$('.c-card__body');
+        await button4.click();
+
         page.on('response', async response => {
             if (response.url().includes('works')) {
                 const json = await response.json();
@@ -61,7 +64,6 @@ async function getData(resolve) {
 
                 if (json.meta.next) {
                     await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
-                    await page.reload({ waitUntil: 'networkidle0' });
                 } else {
                     fs.writeFileSync(`./logs/Sia ASCAP ${content.date}.json`, JSON.stringify(content, null, 4));
                     console.log('Wrote file to disk');
@@ -80,9 +82,6 @@ async function getData(resolve) {
                 }
             }
         });
-
-        const button4 = await page.$('.c-card__body');
-        await button4.click();
     } catch (e) {
         console.log('An error occurred', e);
         resolve();
