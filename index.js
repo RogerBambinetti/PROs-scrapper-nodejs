@@ -11,6 +11,9 @@ let lastContent = require('./logs/' + latestLog);
 
 async function getData(resolve) {
     try {
+
+        setTimeout(resolve, 60 * 1000 * 5);
+
         console.log('Launching browser...');
         const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
 
@@ -65,7 +68,7 @@ async function getData(resolve) {
                         const diff = content.songs.filter(song => !lastContent.songs.includes(song));
 
                         console.log("Detected diff:", diff);
-                        //sendSMS(diff);
+                        sendSMS(diff);
                     }
 
                     lastContent = content;
@@ -101,8 +104,10 @@ async function sendSMS(message) {
 }
 
 async function init() {
-    await new Promise(getData);
-    process.exit();
+    do {
+        await new Promise(getData);
+        process.exit();
+    } while (true)
 }
 
 init();
