@@ -54,17 +54,6 @@ async function getData(resolve) {
             const json = await response.json();
             content.total = json.meta.totalCount;
 
-            if (content.total > lastContent.total) {
-                console.log("Count change detected", lastContent.total, content.total);
-                await sendSMS("Count change detected");
-            } else {
-                console.log("No count change detected");
-            }
-
-            lastContent = content;
-
-            return resolve();
-
             const registeredSongs = json.result.map(r => `${r.workId} ${r.workTitle}`);
             const arr = content.songs.concat(registeredSongs);
 
@@ -85,7 +74,6 @@ async function getData(resolve) {
                 }
 
                 lastContent = content;
-
                 resolve();
             }
         } while (true)
@@ -115,8 +103,7 @@ async function sendSMS(message) {
 async function init() {
     do {
         await new Promise(getData);
-        await addDelay(60);
-        //process.exit();
+        process.exit();
     } while (true)
 }
 
