@@ -54,6 +54,15 @@ async function getData(resolve) {
             const json = await response.json();
             content.total = json.meta.totalCount;
 
+            if (content.total > lastContent.total) {
+                console.log("Count change detected", lastContent.total, content.total);
+                await sendSMS("Count change detected");
+            } else {
+                console.log("No count change detected");
+            }
+
+            return resolve();
+
             const registeredSongs = json.result.map(r => `${r.workId} ${r.workTitle}`);
             const arr = content.songs.concat(registeredSongs);
 
@@ -69,11 +78,8 @@ async function getData(resolve) {
                 console.log('Wrote file to disk');
 
                 if (lastContent && lastContent.total < content.total) {
-                    console.log("Count change detected", lastContent.total, content.total);
                     const diff = content.songs.filter(song => !lastContent.songs.includes(song));
-
                     console.log("Detected diff:", diff);
-                    sendSMS(diff);
                 }
 
                 lastContent = content;
