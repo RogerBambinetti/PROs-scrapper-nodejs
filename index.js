@@ -106,7 +106,7 @@ async function sendSMS(message) {
 async function init() {
     do {
         await new Promise(getData);
-        process.exit();
+        //process.exit();
     } while (true)
 }
 
