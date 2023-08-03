@@ -57,7 +57,7 @@ async function getData(resolve) {
                 content.songs = arr;
                 console.log("Added content");
                 
-                setTimeout(() => page.reload(), 15 * 1000)
+                console.log(page.url());
 
                 if (json.meta.next) {
                     await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
