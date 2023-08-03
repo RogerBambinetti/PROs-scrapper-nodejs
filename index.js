@@ -51,7 +51,7 @@ async function getData(resolve) {
 
         page.on('response', async response => {
             if (response.url().includes('works')) {
-                console.log('ENTROU')
+                console.log('ENTROU', response.status())
                 const text = await response.text();
                 const json = JSON.parse(text)
                 content.total = json.meta.totalCount;
