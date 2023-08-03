@@ -51,9 +51,7 @@ async function getData(resolve) {
 
         page.on('response', async response => {
             if (response.url().includes('works')) {
-                console.log('ENTROU', response.status())
-                const text = await response.text();
-                const json = JSON.parse(text)
+                const json = await response.json();
                 content.total = json.meta.totalCount;
 
                 const registeredSongs = json.result.map(r => `${r.workId} ${r.workTitle}`);
