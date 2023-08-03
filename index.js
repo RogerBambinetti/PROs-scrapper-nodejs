@@ -73,7 +73,7 @@ async function getData(resolve) {
                         const diff = content.songs.filter(song => !lastContent.songs.includes(song));
 
                         console.log("Detected diff:", diff);
-                        //sendSMS(diff);
+                        sendSMS(diff);
                     }
 
                     lastContent = content;
@@ -108,7 +108,8 @@ async function sendSMS(message) {
 async function init() {
     do {
         await new Promise(getData);
-        process.exit();
+        await addDelay(60);
+        //process.exit();
     } while (true)
 }
 
