@@ -61,6 +61,7 @@ async function getData(resolve) {
 
                 if (json.meta.next) {
                     await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
+                    await page.reload({ waitUntil: 'networkidle0' });
                 } else {
                     fs.writeFileSync(`./logs/Sia ASCAP ${content.date}.json`, JSON.stringify(content, null, 4));
                     console.log('Wrote file to disk');
