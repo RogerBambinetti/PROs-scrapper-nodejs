@@ -61,6 +61,8 @@ async function getData(resolve) {
                 console.log("No count change detected");
             }
 
+            lastContent = content;
+
             return resolve();
 
             const registeredSongs = json.result.map(r => `${r.workId} ${r.workTitle}`);
