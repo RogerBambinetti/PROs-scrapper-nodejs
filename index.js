@@ -12,7 +12,7 @@ let lastContent = require('./logs/' + latestLog);
 async function getData(resolve) {
     try {
 
-        setTimeout(resolve, 60 * 1000 * 5);
+        setTimeout(resolve, 60 * 1000 * 3);
 
         console.log('Launching browser...');
         const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
@@ -56,7 +56,9 @@ async function getData(resolve) {
 
                 content.songs = arr;
                 console.log("Added content");
-                await addDelay();
+                
+                setTimeout(() => page.reload(), 15 * 1000)
+
                 if (json.meta.next) {
                     await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
                 } else {
