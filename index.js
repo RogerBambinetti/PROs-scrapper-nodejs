@@ -49,39 +49,38 @@ async function getData(resolve) {
         const button4 = await page.$('.c-card__body');
         await button4.click();
 
-        page.on('response', async response => {
-            if (response.url().includes('works')) {
-                const json = await response.json();
-                content.total = json.meta.totalCount;
+        do {
+            const response = await page.waitForResponse(response => response.url().includes('works'));
+            const json = await response.json();
+            content.total = json.meta.totalCount;
 
-                const registeredSongs = json.result.map(r => `${r.workId} ${r.workTitle}`);
-                const arr = content.songs.concat(registeredSongs);
+            const registeredSongs = json.result.map(r => `${r.workId} ${r.workTitle}`);
+            const arr = content.songs.concat(registeredSongs);
 
-                content.songs = arr;
-                console.log("Added content");
-                
-                console.log(page.url());
+            content.songs = arr;
+            console.log("Added content");
 
-                if (json.meta.next) {
-                    await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
-                } else {
-                    fs.writeFileSync(`./logs/Sia ASCAP ${content.date}.json`, JSON.stringify(content, null, 4));
-                    console.log('Wrote file to disk');
+            console.log(page.url());
 
-                    if (lastContent && lastContent.total < content.total) {
-                        console.log("Count change detected", lastContent.total, content.total);
-                        const diff = content.songs.filter(song => !lastContent.songs.includes(song));
+            if (json.meta.next) {
+                await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
+            } else {
+                fs.writeFileSync(`./logs/Sia ASCAP ${content.date}.json`, JSON.stringify(content, null, 4));
+                console.log('Wrote file to disk');
 
-                        console.log("Detected diff:", diff);
-                        sendSMS(diff);
-                    }
+                if (lastContent && lastContent.total < content.total) {
+                    console.log("Count change detected", lastContent.total, content.total);
+                    const diff = content.songs.filter(song => !lastContent.songs.includes(song));
 
-                    lastContent = content;
-
-                    resolve();
+                    console.log("Detected diff:", diff);
+                    sendSMS(diff);
                 }
+
+                lastContent = content;
+
+                resolve();
             }
-        });
+        } while (true)
     } catch (e) {
         console.log('An error occurred', e);
         resolve();
