@@ -38,7 +38,7 @@ async function getData() {
             const response = await page.waitForResponse(response => response.url().includes('works'));
             const json = await response.json();
 
-            const arr = content.songs.concat(json.result);
+            const arr = songs.concat(json.result);
             songs = arr;
 
             console.log("Added content");
@@ -65,3 +65,5 @@ async function getFormattedData() {
         return { ISWC: d.ISWCCde, workId: d.workId, title: d.workTitle, creators: creatorsString, source: 'ASCAP' }
     });
 }
+
+module.exports = { getFormattedData };
