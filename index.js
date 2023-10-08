@@ -54,7 +54,12 @@ async function getData(resolve) {
             const json = await response.json();
             content.total = json.meta.totalCount;
 
-            const registeredSongs = json.result.map(r => `${r.workId} ${r.workTitle}`);
+            const registeredSongs = json.result.map(r => {
+                const creators = r.interestedParties.filter(p => p.roleCde == "W");
+                const creatorsString = creators.map(p => p.fullName.trim()).sort().join(', ');
+
+                return {ISWC: r.ISWCCde, workId: r.workId, title: r.workTitle, creators: creatorsString, source: 'ASCAP', status: 'Unreleased'}
+            });
             const arr = content.songs.concat(registeredSongs);
 
             content.songs = arr;
@@ -70,7 +75,7 @@ async function getData(resolve) {
 
                 if (lastContent && lastContent.total < content.total) {
                     const diff = content.songs.filter(song => !lastContent.songs.includes(song));
-                    console.log("Detected diff:", diff);
+                    //console.log("Detected diff:", diff);
                 }
 
                 lastContent = content;
