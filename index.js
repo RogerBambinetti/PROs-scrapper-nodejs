@@ -9,9 +9,6 @@ const ascap = {
 
 async function getData(resolve) {
     try {
-
-        setTimeout(resolve, 60 * 1000);
-
         console.log('Launching browser...');
         const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
 
