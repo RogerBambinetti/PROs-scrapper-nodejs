@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const utils = require('../utils/utils');
+const utils = require('../utils/util');
 
 const url = "https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I";
 
