@@ -8,7 +8,7 @@ async function addDelay(seconds = 2) {
 async function writeFile(title, data) {
     const csv = await jsoncsv.json2csv(data, {delimiter: {field: ';'}});
 
-    fs.writeFileSync(`./logs/log.csv`, csv);
+    fs.writeFileSync(`./logs/${title}.csv`, csv);
     console.log('Wrote file to disk');
 }
 

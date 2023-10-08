@@ -4,7 +4,7 @@ const utils = require('./utils/util');
 async function init() {
     const data = await ascap.getFormattedData();
 
-    await utils.writeFile('', data);
+    await utils.writeFile('log', data);
 
     process.exit();
 }
