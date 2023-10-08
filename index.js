@@ -7,9 +7,6 @@ const ascap = {
     url: "https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I"
 }
 
-const latestLog = fs.readdirSync('./logs').pop();
-let lastContent = require('./logs/' + latestLog);
-
 async function getData(resolve) {
     try {
 
@@ -76,12 +73,6 @@ async function getData(resolve) {
                 fs.writeFileSync(`./logs/Sia ASCAP ${content.date}.csv`, csv);
                 console.log('Wrote file to disk');
 
-                if (lastContent && lastContent.total < content.total) {
-                    const diff = content.songs.filter(song => !lastContent.songs.includes(song));
-                    //console.log("Detected diff:", diff);
-                }
-
-                lastContent = content;
                 resolve();
             }
         } while (true)
@@ -93,19 +84,6 @@ async function getData(resolve) {
 
 async function addDelay(seconds = 2) {
     return new Promise((resolve) => setTimeout(resolve, 1000 * seconds));
-}
-
-async function sendSMS(message) {
-    console.log('Sending SMS');
-
-    await axios.post('https://api-rest.zenvia.com/services/send-sms', {
-        sendSmsRequest: {
-            from: 'Song Tracker',
-            to: '+5547988380999',
-            msg: JSON.stringify(message),
-            flashSms: false
-        }
-    }, { headers: { authorization: "Basic ZGV2b3ouc21zb25saW5lOklIQkNlVmZFRHo=" } });
 }
 
 async function init() {
