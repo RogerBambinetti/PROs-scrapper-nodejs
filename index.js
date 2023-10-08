@@ -1,4 +1,5 @@
 const axios = require('axios');
+const jsoncsv = require('json-2-csv')
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
@@ -70,7 +71,9 @@ async function getData(resolve) {
             if (json.meta.next) {
                 await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
             } else {
-                fs.writeFileSync(`./logs/Sia ASCAP ${content.date}.json`, JSON.stringify(content, null, 4));
+                const csv = await jsoncsv.json2csv(content.songs, {delimiter: {field: ';'}});
+
+                fs.writeFileSync(`./logs/Sia ASCAP ${content.date}.csv`, csv);
                 console.log('Wrote file to disk');
 
                 if (lastContent && lastContent.total < content.total) {
