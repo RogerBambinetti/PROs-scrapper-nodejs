@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const utils = require('../utils/utils');
 
 const url = "https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I";
 
@@ -18,7 +19,7 @@ async function getData() {
         const button1 = await frameContent.$('.call');
         await button1.click()
 
-        await addDelay();
+        await utils.addDelay();
 
         const button2 = await page.$$('button');
         await button2[22].click();
@@ -26,7 +27,7 @@ async function getData() {
         const button3 = await page.$$('button');
         await button3[20].click();
 
-        await addDelay();
+        await utils.addDelay();
 
         const button4 = await page.$('.c-card__body');
         await button4.click();
@@ -38,7 +39,6 @@ async function getData() {
             const json = await response.json();
 
             const arr = content.songs.concat(json.result);
-
             songs = arr;
 
             console.log("Added content");
@@ -62,10 +62,6 @@ async function getFormattedData() {
         const creators = d.interestedParties.filter(p => p.roleCde == "W");
         const creatorsString = creators.map(p => p.fullName.trim()).sort().join(', ');
 
-        return {ISWC: d.ISWCCde, workId: d.workId, title: d.workTitle, creators: creatorsString, source: 'ASCAP'}
+        return { ISWC: d.ISWCCde, workId: d.workId, title: d.workTitle, creators: creatorsString, source: 'ASCAP' }
     });
-}
-
-async function addDelay(seconds = 2) {
-    return new Promise((resolve) => setTimeout(resolve, 1000 * seconds));
 }
