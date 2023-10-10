@@ -64,7 +64,10 @@ async function getFormattedData() {
     const data = await getData();
 
     return data.map(d => {
-        return { ISWC: d.ISWC, workId: "", title: d.title, creators: "", source: 'KOMCA' }
+        const title = d.title.split(']').pop().split('-')[0].trim();
+        const workId = d.title.split(']').pop().split('-').pop().trim();
+
+        return { ISWC: d.ISWC, workId: workId, title: title, creators: "", source: 'KOMCA' }
     });
 }
 
