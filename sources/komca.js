@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const utils = require('../utils/util');
 
-const url = "https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I";
+const url = "https://www.komca.or.kr/foreign2/eng/S01.jsp";
 
 async function getData() {
     try {
@@ -13,39 +13,44 @@ async function getData() {
         console.log('Navigating')
         await page.goto(url, { waitUntil: 'networkidle0' });
 
-        const iframe = await page.$('.truste_popframe');
-        const frameContent = await iframe.contentFrame();
+        const button1 = await page.$$('#foreign');
+        await button1[0].click();
 
-        const button1 = await frameContent.$('.call');
-        await button1.click()
-
-        await utils.addDelay();
-
-        const button2 = await page.$$('button');
-        await button2[22].click();
-
-        const button3 = await page.$$('button');
-        await button3[20].click();
-
-        await utils.addDelay();
-
-        const button4 = await page.$('.c-card__body');
-        await button4.click();
+        await page.type('#author', 'FURLER SIA');
+        await page.keyboard.press('Enter');
+        await page.waitForNavigation();
 
         let songs = []
+        const totalspan = await page.$('.result_total span');
+        const total = await totalspan.evaluate(x => parseInt(x.textContent));
 
         do {
-            const response = await page.waitForResponse(response => response.url().includes('works'));
-            const json = await response.json();
+            const articles = await page.$$('.result_article');
+            const result = [];
 
-            const arr = songs.concat(json.result);
+            for (const article of articles) {
+                const title = await article.$('.tit2');
+                const ISWC = await article.$('.metadata span');
+
+                result.push({
+                    title: await title.evaluate(x => x.textContent),
+                    ISWC: await ISWC.evaluate(x => x.textContent),
+                });
+            }
+
+            const arr = songs.concat(result);
             songs = arr;
 
-            console.log("Added content");
-            console.log(page.url());
+            console.log("Added content", songs.length, "/", total);
 
-            if (json.meta.next) {
-                await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
+            if (songs.length !== total) {
+                if (await page.evaluate("document.querySelector('a strong').parentElement.nextElementSibling")) {
+                    await page.evaluate("document.querySelector('a strong').parentElement.nextElementSibling.click()")
+                } else {
+                    await page.evaluate("document.querySelector('.direction.next').click()");
+                }
+
+                await utils.addDelay()
             } else {
                 return songs;
             }
@@ -59,10 +64,7 @@ async function getFormattedData() {
     const data = await getData();
 
     return data.map(d => {
-        const creators = d.interestedParties.filter(p => p.roleCde == "W");
-        const creatorsString = creators.map(p => p.fullName.trim()).sort().join(', ');
-
-        return { ISWC: d.ISWCCde, workId: d.workId, title: d.workTitle, creators: creatorsString, source: 'KOMCA' }
+        return { ISWC: d.ISWC, workId: "", title: d.title, creators: "", source: 'KOMCA' }
     });
 }
 
