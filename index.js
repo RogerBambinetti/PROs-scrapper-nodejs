@@ -9,13 +9,17 @@ async function init() {
 
     const sources = fs.readdirSync('./sources');
 
+    let totalData = [];
+
     for (const source of sources) {
         const module = require(`./sources/${source}`);
 
         const data = await module.getFormattedData();
 
-        await utils.writeFile(`${path.basename(source, '.js')} ${formattedDate}`, data)
+        totalData = totalData.concat(data);
     };
+
+    await utils.writeFile(`log ${formattedDate}`, totalData)
 
     process.exit();
 }
