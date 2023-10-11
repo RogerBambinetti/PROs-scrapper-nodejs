@@ -31,10 +31,23 @@ async function getData() {
             for (const article of articles) {
                 const title = await article.$('.tit2');
                 const ISWC = await article.$('.metadata span');
+                const creators = [];
+
+                const tds = await article.$$('td');
+
+                for (let i = 0; i < tds.length; i++) {
+                    const text = await tds[i].evaluate(x => x.textContent);
+
+                    if (text === 'CA' || text === 'C') {
+                        const nextText = await tds[i + 1].evaluate(x => x.textContent);
+                        creators.push(nextText);
+                    }
+                }
 
                 result.push({
                     title: await title.evaluate(x => x.textContent),
                     ISWC: await ISWC.evaluate(x => x.textContent),
+                    creators
                 });
             }
 
@@ -67,7 +80,9 @@ async function getFormattedData() {
         const title = d.title.split(']').pop().split('-')[0].trim();
         const workId = d.title.split(']').pop().split('-').pop().trim();
 
-        return { ISWC: d.ISWC, workId: workId, title: title, creators: "", source: 'KOMCA' }
+        const creatorsString = d.creators.map(p => p.trim()).sort().join(', ');
+
+        return { ISWC: d.ISWC, workId: workId, title: title, creators: creatorsString, source: 'KOMCA' }
     });
 }
 
