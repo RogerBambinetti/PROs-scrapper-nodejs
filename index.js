@@ -23,6 +23,7 @@ async function init() {
 
         for (const d of data) {
             if (!csv.toString().includes(d.workId)) {
+                d.date = formattedDate;
                 oldData.push(d);
                 console.log('New record', d);
             }
