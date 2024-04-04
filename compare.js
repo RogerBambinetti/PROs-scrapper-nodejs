@@ -11,8 +11,6 @@ async function init(){
             console.log(k.title)
         }
     })
-
-    console.log(file)
 }
 
 init()
