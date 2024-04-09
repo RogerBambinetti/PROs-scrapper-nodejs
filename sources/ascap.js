@@ -35,7 +35,7 @@ async function getData() {
         let songs = []
 
         do {
-            const response = await page.waitForResponse(response => response.url().includes('works'));
+            const response = await page.waitForResponse(response => response.url().includes('works') && response.request().method() !== "OPTIONS");
             const json = await response.json();
 
             const arr = songs.concat(json.result);
