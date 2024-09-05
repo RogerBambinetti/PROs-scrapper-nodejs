@@ -17,20 +17,20 @@ async function getData() {
         const frameContent = await iframe.contentFrame();
 
         const button1 = await frameContent.$('.call');
-        await button1.click()
+        await button1?.click()
 
         await utils.addDelay();
 
         const button2 = await page.$$('button');
-        await button2[22].click();
+        await button2[22]?.click();
 
         const button3 = await page.$$('button');
-        await button3[20].click();
+        await button3[20]?.click();
 
         await utils.addDelay();
 
         const button4 = await page.$('.c-card__body');
-        await button4.click();
+        await button4?.click();
 
         let songs = []
 
