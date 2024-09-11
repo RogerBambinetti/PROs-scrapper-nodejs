@@ -8,8 +8,6 @@ async function init() {
     const currentDate = new Date();
     const formattedDate = currentDate.getFullYear() + '.' + (currentDate.getMonth() + 1) + '.' + currentDate.getDate();
 
-    console.log('Init', formattedDate);
-
     const sources = fs.readdirSync('./sources');
 
     for (const source of sources) {
@@ -18,7 +16,8 @@ async function init() {
 
         const csv = fs.readFileSync(`./logs/${moduleName}.csv`);
 
-        const oldData = parse(csv, {columns: true, delimiter: ';'});
+        const oldData = parse(csv, { columns: true, delimiter: ';' });
+        console.log('---------------- STARTING SOURCE', source.toUpperCase(), '----------------');
         const data = await module.getFormattedData();
 
         for (const d of data) {
