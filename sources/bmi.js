@@ -1,7 +1,8 @@
 const puppeteer = require('puppeteer');
 const utils = require('../utils/util');
 
-const url = "https://repertoire.bmi.com/Search/Search?Main_Search_Text=FURLER%20SIA&Main_Search=Catalog&Search_Type=all&View_Count=100&Page_Number=1&Part_Type=WriterList&Part_Id=LSsWSgd%252bHiOth6NNjQIKUQ%253d%253d&Part_Id_Sub=YO0HedHMatLb45JzS23DVw%253d%253d&Part_Cae=Pm9DHKQ%252buxzCK2UKlQEHCA%253d%253d&Original_Search=Writer%2FComposer";
+const url = "https://repertoire.bmi.com/Search/Search?Main_Search_Text=FURLER%20SIA&Main_Search=Catalog&Search_Type=all&View_Count=100&Page_Number=currentPage&Part_Type=WriterList&Part_Id=LSsWSgd%252bHiOth6NNjQIKUQ%253d%253d&Part_Id_Sub=YO0HedHMatLb45JzS23DVw%253d%253d&Part_Cae=Pm9DHKQ%252buxzCK2UKlQEHCA%253d%253d&Original_Search=Writer%2FComposer";
+let currentPage = 1;
 
 async function getData() {
     try {
@@ -12,7 +13,7 @@ async function getData() {
         const page = await browser.newPage();
 
         console.log('Navigating')
-        await page.goto(url, { waitUntil: 'networkidle0' });
+        await page.goto(url.replace('currentPage', currentPage), { waitUntil: 'networkidle0' });
 
         const button1 = await page.$$('#btnAccept');
 
@@ -51,9 +52,11 @@ async function getData() {
             console.log("Added content", songs.length, "/", total);
 
             if (songs.length < total) {
-                await page.evaluate("document.scrollingElement.scrollBy(0, 100 * 100 * 100)");
+                currentPage++;
+
+                await page.goto(url.replace('currentPage', currentPage), { waitUntil: 'networkidle0' });
                 await utils.addDelay();
-                await page.evaluate("document.querySelector('.pagination .current').nextElementSibling.click()")
+                await page.evaluate("document.scrollingElement.scrollBy(0, 100 * 100 * 100)");
             } else {
                 return songs;
             }
