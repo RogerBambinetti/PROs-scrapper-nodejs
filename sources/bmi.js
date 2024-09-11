@@ -21,8 +21,7 @@ async function getData() {
         }
 
         await page.waitForSelector('.results-font');
-
-        await page.screenshot({ path: './screenshot.png' })
+        await page.evaluate("document.scrollingElement.scrollBy(0, 100 * 100 * 100)");
 
         let songs = []
         const totalspan = await page.$('.results-font');
@@ -51,14 +50,10 @@ async function getData() {
 
             console.log("Added content", songs.length, "/", total);
 
-            if (songs.length !== total) {
-                if (await page.evaluate("document.querySelector('.pagination .current').nextElementSibling")) {
-                    await page.evaluate("document.querySelector('.pagination .current').nextElementSibling.click()")
-                } else {
-
-                }
-
-                await utils.addDelay()
+            if (songs.length < total) {
+                await page.evaluate("document.scrollingElement.scrollBy(0, 100 * 100 * 100)");
+                await utils.addDelay();
+                await page.evaluate("document.querySelector('.pagination .current').nextElementSibling.click()")
             } else {
                 return songs;
             }
@@ -73,7 +68,7 @@ async function getFormattedData() {
 
     return data.map(d => {
         const title = d.title.split(']').pop().split('-')[0].trim();
-        const workId = d.title.split(']').pop().split('-').pop().trim();
+        const workId = d.workId.split(']').pop().split('-').pop().trim();
 
         const creatorsString = d.creators.map(p => p.trim()).sort().join(', ');
 
