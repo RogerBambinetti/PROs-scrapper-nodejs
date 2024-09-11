@@ -34,6 +34,11 @@ async function getData() {
                 const tds = await article.$$('td');
                 const creators = [];
 
+                const lis = await tds[3].$$('li');
+                for (const li of lis) {
+                    creators.push(await li.evaluate(x => x.textContent));
+                }
+
                 result.push({
                     title: await title.evaluate(x => x.textContent),
                     ISWC: '',
