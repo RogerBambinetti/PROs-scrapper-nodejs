@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const utils = require('../utils/util');
 
-const url = "https://repertoire.bmi.com/Search/Search?Main_Search_Text=FURLER%20SIA&Main_Search=Catalog&Search_Type=all&View_Count=100&Page_Number=currentPage&Part_Type=WriterList&Part_Id=LSsWSgd%252bHiOth6NNjQIKUQ%253d%253d&Part_Id_Sub=YO0HedHMatLb45JzS23DVw%253d%253d&Part_Cae=Pm9DHKQ%252buxzCK2UKlQEHCA%253d%253d&Original_Search=Writer%2FComposer";
+const url = "https://repertoire.bmi.com/Search/Search?Main_Search_Text=FURLER%20SIA&Main_Search=Catalog&Search_Type=bmi&View_Count=100&Page_Number=currentPage&Part_Type=WriterList&Part_Id=LSsWSgd%252bHiOth6NNjQIKUQ%253d%253d&Part_Id_Sub=YO0HedHMatLb45JzS23DVw%253d%253d&Part_Cae=Pm9DHKQ%252buxzCK2UKlQEHCA%253d%253d&Original_Search=Writer%2FComposer";
 let currentPage = 1;
 
 async function getData() {
@@ -15,14 +15,10 @@ async function getData() {
         console.log('Navigating')
         await page.goto(url.replace('currentPage', currentPage), { waitUntil: 'networkidle0' });
 
-        const button1 = await page.$$('#btnAccept');
+        const button1 = await page.$('#btnAccept');
+        await button1?.click();
 
-        if (button1) {
-            await button1[0].click();
-        }
-
-        await page.waitForSelector('.results-font');
-        await page.evaluate("document.scrollingElement.scrollBy(0, 100 * 100 * 100)");
+        await page.waitForSelector('.pagination');
 
         let songs = []
         const totalspan = await page.$('.results-font');
@@ -55,8 +51,7 @@ async function getData() {
                 currentPage++;
 
                 await page.goto(url.replace('currentPage', currentPage), { waitUntil: 'networkidle0' });
-                await utils.addDelay();
-                await page.evaluate("document.scrollingElement.scrollBy(0, 100 * 100 * 100)");
+                await page.waitForSelector('.pagination');
             } else {
                 return songs;
             }
