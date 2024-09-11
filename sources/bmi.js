@@ -6,8 +6,6 @@ const url = "https://repertoire.bmi.com/Search/Search?Main_Search_Text=FURLER%20
 async function getData() {
     try {
 
-        return [];
-        
         console.log('Launching browser...');
         const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
 
@@ -18,13 +16,13 @@ async function getData() {
 
         const button1 = await page.$$('#btnAccept');
 
-        if(button1){
-        await button1[0].click();
+        if (button1) {
+            await button1[0].click();
         }
 
         await page.waitForSelector('.results-font');
 
-        await page.screenshot({path:'./screenshot.png'})
+        await page.screenshot({ path: './screenshot.png' })
 
         let songs = []
         const totalspan = await page.$('.results-font');
@@ -37,25 +35,13 @@ async function getData() {
             for (const article of articles) {
                 const title = await article.$('.song-title');
 
-                console.log(await title.evaluate(x => x.textContent))
-                continue
-                const ISWC = await article.$('.metadata span');
-                const creators = [];
-
                 const tds = await article.$$('td');
-
-                for (let i = 0; i < tds.length; i++) {
-                    const text = await tds[i].evaluate(x => x.textContent);
-
-                    if (text === 'CA' || text === 'C') {
-                        const nextText = await tds[i + 1].evaluate(x => x.textContent);
-                        creators.push(nextText);
-                    }
-                }
+                const creators = [];
 
                 result.push({
                     title: await title.evaluate(x => x.textContent),
-                    ISWC: await ISWC.evaluate(x => x.textContent),
+                    ISWC: '',
+                    workId: await tds[1].evaluate(x => x.textContent),
                     creators
                 });
             }
@@ -69,7 +55,7 @@ async function getData() {
                 if (await page.evaluate("document.querySelector('.pagination .current').nextElementSibling")) {
                     await page.evaluate("document.querySelector('.pagination .current').nextElementSibling.click()")
                 } else {
-                   
+
                 }
 
                 await utils.addDelay()
