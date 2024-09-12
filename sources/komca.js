@@ -63,7 +63,7 @@ async function getData() {
                     await page.evaluate("document.querySelector('.direction.next').click()");
                 }
 
-                await utils.addDelay()
+                await page.waitForSelector('.pagination');
             } else {
                 return songs;
             }
