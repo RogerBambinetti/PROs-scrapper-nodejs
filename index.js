@@ -11,24 +11,28 @@ async function init() {
     const sources = fs.readdirSync('./sources');
 
     for (const source of sources) {
-        const moduleName = `${path.basename(source, '.js')}`;
-        const module = require(`./sources/${source}`);
+        try {
+            const moduleName = `${path.basename(source, '.js')}`;
+            const module = require(`./sources/${source}`);
 
-        const csv = fs.readFileSync(`./logs/${moduleName}.csv`);
+            const csv = fs.readFileSync(`./logs/${moduleName}.csv`);
 
-        const oldData = parse(csv, { columns: true, delimiter: ';' });
-        console.log('---------------- STARTING SOURCE', source.toUpperCase(), '----------------');
-        const data = await module.getFormattedData();
+            const oldData = parse(csv, { columns: true, delimiter: ';' });
+            console.log('---------------- STARTING SOURCE', source.toUpperCase(), '----------------');
+            const data = await module.getFormattedData();
 
-        for (const d of data) {
-            if (!csv.toString().includes(d.workId)) {
-                d.date = formattedDate;
-                oldData.push(d);
-                console.log('New record', d);
+            for (const d of data) {
+                if (!csv.toString().includes(d.workId)) {
+                    d.date = formattedDate;
+                    oldData.push(d);
+                    console.log('New record', d);
+                }
             }
-        }
 
-        await utils.writeFile(moduleName, oldData)
+            await utils.writeFile(moduleName, oldData)
+        } catch (err) {
+            console.log('ERROR')
+        }
     };
 
     process.exit();
