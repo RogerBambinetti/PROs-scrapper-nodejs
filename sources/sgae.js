@@ -27,7 +27,7 @@ async function getData() {
 
         let songs = []
         const totalspan = await page.$('#strNumTotalReg');
-        const total = await totalspan.evaluate(x => parseInt(x.textContent.match(/\d/g).join('')));
+        const total = await totalspan.evaluate(x => parseInt(x.textContent));
 
         do {
             const articles = await page.$$('#tablaObras tbody tr');
@@ -52,10 +52,8 @@ async function getData() {
 
             console.log("Added content", songs.length, "/", total);
 
-            return songs
-
             if (songs.length < total) {
-
+                await page.evaluate("document.querySelector('.active').parentNode.nextElementSibling.querySelector('a').click()");
                 await page.waitForSelector('#tablaPaginacion');
             } else {
                 return songs;
