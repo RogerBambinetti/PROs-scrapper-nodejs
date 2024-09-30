@@ -73,7 +73,7 @@ async function getFormattedData() {
 
         const creatorsString = d.creators.map(p => p.trim()).sort().join(', ');
 
-        return { ISWC: d.ISWC, workId: workId, title: title, creators: creatorsString, source: 'SOCAN' }
+        return { ISWC: d.ISWC, workId: workId, title: title, creators: creatorsString, source: 'SGAE' }
     });
 }
 
