@@ -16,7 +16,6 @@ async function getData() {
         const iframe = await page.$('.truste_popframe');
         const frameContent = await iframe.contentFrame();
 
-        console.log('button1')
         const button1 = await frameContent.$('.call');
         await button1?.click()
 
@@ -24,21 +23,16 @@ async function getData() {
 
         const button2 = await page.$$('button');
         await button2[22]?.click();
-        console.log('button1')
 
         const button3 = await page.$$('button');
         await button3[20]?.click();
-        console.log('button1')
 
         await utils.addDelay();
 
         const button4 = await page.$('.c-card__body');
         await button4?.click();
-        console.log('button1')
 
         let songs = []
-
-        await page.screenshot({ path: './screenshot.png' })
 
         do {
             const response = await page.waitForResponse(response => response.url().includes('works') && response.request().method() !== "OPTIONS");
