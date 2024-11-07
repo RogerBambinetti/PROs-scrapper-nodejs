@@ -44,10 +44,11 @@ async function findButtonByText(page, buttonText) {
 
 async function handleAdditionalButtons(page) {
     try {
-
+        await utils.addDelay();
         const button1 = await findButtonByText(page, 'I Agree');
         await button1?.click();
 
+        await utils.addDelay();
         const button2 = await findButtonByText(page, 'Skip');
         await button2?.click();
 
@@ -98,9 +99,8 @@ async function getData() {
     try {
         await navigateToPage(page);
         await closeCookieBanner(page);
-        await utils.addDelay();
         await handleAdditionalButtons(page);
-        await page.screenshot({ path: './print.png' })
+
         const songs = await collectSongData(page);
         return songs;
     } catch (e) {
