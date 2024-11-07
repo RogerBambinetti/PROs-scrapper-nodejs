@@ -1,14 +1,14 @@
 const puppeteer = require('puppeteer');
 const utils = require('../utils/util');
 
-const url = "https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I";
+const URL = "https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I";
 
 async function launchBrowser() {
     console.log('Launching browser...');
     return puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
 }
 
-async function navigateToPage(page) {
+async function navigateToPage(page, url) {
     console.log('Navigating to page...');
     await page.goto(url, { waitUntil: 'networkidle0' });
 }
@@ -96,7 +96,7 @@ async function getData() {
     const page = await browser.newPage();
 
     try {
-        await navigateToPage(page);
+        await navigateToPage(page, URL);
         await closeCookieBanner(page);
         await handleAdditionalButtons(page);
 
