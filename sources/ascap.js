@@ -52,7 +52,6 @@ async function handleAdditionalButtons(page) {
         const button2 = await findButtonByText(page, 'Skip');
         await button2?.click();
 
-        await page.waitForSelector('.c-card__body');
         const mainContentButton = await page.$('.c-card__body');
         await mainContentButton?.click();
 
