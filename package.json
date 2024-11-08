@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "csv-parse": "^5.5.2",
+    "dotenv": "^16.4.5",
     "json-2-csv": "^4.1.0",
     "puppeteer": "^20.9.0"
   },

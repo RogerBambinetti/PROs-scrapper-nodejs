@@ -5,7 +5,7 @@ import utils from '../utils/util';
 class ASCAP extends BaseSource {
 
     constructor() {
-        super("https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I");
+        super(process.env.URL_ASCAP as string);
     }
 
     async closeCookieBanner(page: Page) {
@@ -50,9 +50,9 @@ class ASCAP extends BaseSource {
             const mainContentButton = await page.$('.c-card__body');
             await mainContentButton?.click();
 
-            console.log('Handled additional actions');
+            console.log('Handled initial actions');
         } catch (e) {
-            console.log('Error clicking additional actions:', e);
+            console.log('Error handling initial actions:', e);
         }
     }
 

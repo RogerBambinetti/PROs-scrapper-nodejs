@@ -1,9 +1,13 @@
+import { configDotenv } from "dotenv";
+
 const fs = require('fs');
 const path = require('path');
 const { parse } = require('csv-parse/sync');
 const utils = require('./utils/util');
 
 async function init() {
+
+    configDotenv();
 
     const currentDate = new Date();
     const formattedDate = currentDate.getFullYear() + '.' + (currentDate.getMonth() + 1) + '.' + currentDate.getDate();
