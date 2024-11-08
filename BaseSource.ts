@@ -30,11 +30,7 @@ export default class BaseSoruce {
         }
     }
 
-    async closeCookieBanner(page: Page): Promise<void> {
-        return;
-    }
-
-    async handleAdditionalButtons(page: Page): Promise<void> {
+    async handleInitialActions(page: Page): Promise<void> {
         return;
     }
 
@@ -42,14 +38,13 @@ export default class BaseSoruce {
         return [];
     }
 
-    async getData() {
+    async getData(): Promise<any> {
         const browser = await this.launchBrowser();
         const page = await browser.newPage();
 
         try {
             await this.navigateToPage(page, this.url);
-            await this.closeCookieBanner(page);
-            await this.handleAdditionalButtons(page);
+            await this.handleInitialActions(page);
             const songs = await this.collectSongData(page);
 
             return songs;
@@ -60,7 +55,7 @@ export default class BaseSoruce {
         }
     }
 
-    async getFormattedData() {
+    async getFormattedData(): Promise<Array<object>> {
         const data = await this.getData();
 
         return data;

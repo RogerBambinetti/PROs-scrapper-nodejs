@@ -34,8 +34,11 @@ class ASCAP extends BaseSource {
         }
     }
 
-    async handleAdditionalButtons(page: Page) {
+    async handleInitialActions(page: Page) {
         try {
+
+            await this.closeCookieBanner(page);
+
             await utils.addDelay();
             const button1 = await this.findButtonByText(page, 'I Agree');
             await button1?.click();
@@ -47,9 +50,9 @@ class ASCAP extends BaseSource {
             const mainContentButton = await page.$('.c-card__body');
             await mainContentButton?.click();
 
-            console.log('Handled additional buttons');
+            console.log('Handled additional actions');
         } catch (e) {
-            console.log('Error clicking additional buttons:', e);
+            console.log('Error clicking additional actions:', e);
         }
     }
 
