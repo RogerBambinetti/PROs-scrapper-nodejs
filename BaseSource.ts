@@ -18,27 +18,27 @@ export default class BaseSoruce {
         await page.goto(url, { waitUntil: 'networkidle0' });
     }
 
-    async findButtonByText(page, buttonText) {
+    async findButtonByText(page: Page, buttonText: string) {
         const buttons = await page.$$('button');
 
         for (const btn of buttons) {
             const btnText = await btn.evaluate(x => x.textContent);
 
-            if (btnText.trim() == buttonText) {
+            if (btnText && btnText.trim() == buttonText) {
                 return btn;
             }
         }
     }
 
-    async closeCookieBanner(page: Page) {
+    async closeCookieBanner(page: Page): Promise<void> {
         return;
     }
 
-    async handleAdditionalButtons(page: Page) {
+    async handleAdditionalButtons(page: Page): Promise<void> {
         return;
     }
 
-    async collectSongData(page: Page) {
+    async collectSongData(page: Page): Promise<any> {
         return [];
     }
 

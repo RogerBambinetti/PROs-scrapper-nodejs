@@ -12,13 +12,15 @@ async function init() {
 
     for (const source of sources) {
         try {
-            const moduleName = `${path.basename(source, '.js')}`;
-            const module = require(`./sources/${source}`);
+            const moduleName = `${path.basename(source, '.ts')}`;
+            const { default: Module } = require(`./sources/${source}`);
+
+            const module = new Module();
 
             const csv = fs.readFileSync(`./logs/${moduleName}.csv`);
-
             const oldData = parse(csv, { columns: true, delimiter: ';' });
-            console.log('---------------- STARTING SOURCE', source.toUpperCase(), '----------------');
+
+            console.log('---------------- STARTING SOURCE', moduleName.toUpperCase(), '----------------');
             const data = await module.getFormattedData();
 
             for (const d of data) {
@@ -31,7 +33,7 @@ async function init() {
 
             await utils.writeFile(moduleName, oldData)
         } catch (err) {
-            console.log('ERROR')
+            console.log('ERROR', err)
         }
     };
 

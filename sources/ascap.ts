@@ -1,13 +1,11 @@
 import { Page } from 'puppeteer';
-import BaseSource from './BaseSource';
+import BaseSource from '../BaseSource';
 import utils from '../utils/util';
-
-const URL = "https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I";
 
 class ASCAP extends BaseSource {
 
     constructor() {
-        super(URL);
+        super("https://www.ascap.com/repertory#/ace/search/writer/FURLER%20SIA%20KATE%20I");
     }
 
     async closeCookieBanner(page: Page) {
@@ -15,7 +13,16 @@ class ASCAP extends BaseSource {
             const iframe = await page.waitForSelector('.truste_popframe');
             await utils.addDelay();
 
+            if (!iframe) {
+                return;
+            }
+
             const frameContent = await iframe.contentFrame();
+
+            if (!frameContent) {
+                return;
+            }
+
             const button = await frameContent.$('.call');
 
             if (button) {
@@ -27,7 +34,7 @@ class ASCAP extends BaseSource {
         }
     }
 
-    async handleAdditionalButtons(page) {
+    async handleAdditionalButtons(page: Page) {
         try {
             await utils.addDelay();
             const button1 = await this.findButtonByText(page, 'I Agree');
@@ -46,8 +53,8 @@ class ASCAP extends BaseSource {
         }
     }
 
-    async collectSongData(page) {
-        let songs = [];
+    async collectSongData(page: Page) {
+        let songs: Array<object> = [];
 
         do {
             try {
@@ -60,10 +67,7 @@ class ASCAP extends BaseSource {
                 console.log("Added content from response");
 
                 if (json.meta.next) {
-                    await page.evaluate(() => {
-                        const nextButton = document.querySelector('a.active').parentNode.nextElementSibling.firstChild;
-                        if (nextButton) nextButton.click();
-                    });
+                    await page.evaluate("document.querySelector('a.active').parentNode.nextElementSibling.firstChild.click()");
                 } else {
                     break;
                 }
@@ -79,9 +83,9 @@ class ASCAP extends BaseSource {
     async getFormattedData() {
         const data = await this.getData();
 
-        return data.map(d => {
-            const creators = d.interestedParties.filter(p => p.roleCde === "W");
-            const creatorsString = creators.map(p => p.fullName.trim()).sort().join(', ');
+        return data.map((d: any) => {
+            const creators = d.interestedParties.filter((p: any) => p.roleCde === "W");
+            const creatorsString = creators.map((p: any) => p.fullName.trim()).sort().join(', ');
 
             return {
                 ISWC: d.ISWCCde,

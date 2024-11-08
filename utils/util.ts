@@ -5,7 +5,7 @@ async function addDelay(seconds = 2) {
     return new Promise((resolve) => setTimeout(resolve, 1000 * seconds));
 }
 
-async function readFile(path) {
+async function readFile(path: string) {
     const data = fs.readFileSync(path, { encoding: 'utf-8' });
 
     const json = await jsoncsv.csv2json(data, { delimiter: { field: ';' } });
@@ -13,7 +13,7 @@ async function readFile(path) {
     return json;
 }
 
-async function writeFile(title, data) {
+async function writeFile(title: string, data: Array<object>) {
     const csv = await jsoncsv.json2csv(data, { delimiter: { field: ';' } });
 
     fs.writeFileSync(`./logs/${title}.csv`, csv);
