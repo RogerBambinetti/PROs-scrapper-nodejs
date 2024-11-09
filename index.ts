@@ -1,9 +1,9 @@
 import { configDotenv } from "dotenv";
 
-const fs = require('fs');
-const path = require('path');
-const { parse } = require('csv-parse/sync');
-const utils = require('./utils/util');
+import fs from 'fs';
+import path from 'path';
+import { parse } from 'csv-parse/sync';
+import util from "./utils/util";
 
 async function init() {
 
@@ -35,7 +35,7 @@ async function init() {
                 }
             }
 
-            await utils.writeFile(moduleName, oldData)
+            await util.writeFile(moduleName, oldData)
         } catch (err) {
             console.log('ERROR', err)
         }
