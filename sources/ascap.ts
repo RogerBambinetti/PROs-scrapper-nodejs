@@ -13,17 +13,8 @@ class ASCAP extends BaseSource {
             const iframe = await page.waitForSelector('.truste_popframe');
             await utils.addDelay();
 
-            if (!iframe) {
-                return;
-            }
-
-            const frameContent = await iframe.contentFrame();
-
-            if (!frameContent) {
-                return;
-            }
-
-            const button = await frameContent.$('.call');
+            const frameContent = await iframe?.contentFrame();
+            const button = await frameContent?.$('.call');
 
             if (button) {
                 await button.click();

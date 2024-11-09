@@ -26,12 +26,8 @@ class BMI extends BaseSource {
         let songs = []
         const totalspan = await page.$('.results-font');
 
-        if (!totalspan) {
-            return
-        }
-
         //@ts-ignore
-        const total = await totalspan.evaluate(x => parseInt(x.textContent.match(/\d/g).join('')));
+        const total = await totalspan?.evaluate(x => parseInt(x.textContent.match(/\d/g).join('')));
 
         do {
             const articles = await page.$$('.result-list .result-row-small-browser');
