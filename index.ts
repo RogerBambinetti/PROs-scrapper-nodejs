@@ -12,7 +12,7 @@ async function init() {
     const currentDate = new Date();
     const formattedDate = currentDate.getFullYear() + '.' + (currentDate.getMonth() + 1) + '.' + currentDate.getDate();
 
-    const sources = fs.readdirSync('./sources');
+    const sources = fs.readdirSync('./sources').filter(source => source.includes('.ts'));
 
     for (const source of sources) {
         try {
