@@ -55,9 +55,16 @@ export default class BaseSoruce {
         }
     }
 
-    async getFormattedData(): Promise<Array<object>> {
+    async getFormattedData(): Promise<Array<any>> {
         const data = await this.getData();
 
-        return data;
+        return data.map((d: any) => {
+            const title = d.title.split(']').pop().split('-')[0].trim();
+            const workId = d.workId.split(']').pop().split('-').pop().trim();
+
+            const creatorsString = d.creators.map((p: any) => p.trim()).sort().join(', ');
+
+            return { ISWC: d.ISWC, workId: workId, title: title, creators: creatorsString, source: this.constructor.name }
+        });
     }
 }
