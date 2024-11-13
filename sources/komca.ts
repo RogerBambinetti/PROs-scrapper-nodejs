@@ -1,28 +1,31 @@
-const puppeteer = require('puppeteer');
-const utils = require('../utils/util');
+import { Page } from 'puppeteer';
+import BaseSource from '../BaseSource';
 
-const url = "https://www.komca.or.kr/foreign2/eng/S01.jsp";
+class KOMCA extends BaseSource {
 
-async function getData() {
-    try {
-        console.log('Launching browser...');
-        const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
+    constructor() {
+        super(process.env.URL_KOMCA as string);
+    }
 
-        const page = await browser.newPage();
+    async handleInitialActions(page: Page) {
+        try {
+            const button1 = await page.$$('#foreign');
+            await button1[0]?.click();
 
-        console.log('Navigating')
-        await page.goto(url, { waitUntil: 'networkidle0' });
+            await page.type('#author', 'FURLER SIA');
+            await page.keyboard.press('Enter');
+            await page.waitForNavigation();
 
-        const button1 = await page.$$('#foreign');
-        await button1[0].click();
+            console.log('Handled initial actions');
+        } catch (e) {
+            console.log('Error handling initial actions:', e);
+        }
+    }
 
-        await page.type('#author', 'FURLER SIA');
-        await page.keyboard.press('Enter');
-        await page.waitForNavigation();
-
-        let songs = []
+    async collectSongData(page: Page) {
+        let songs: Array<object> = []
         const totalspan = await page.$('.result_total span');
-        const total = await totalspan.evaluate(x => parseInt(x.textContent));
+        const total = totalspan ? await totalspan.evaluate(x => parseInt(x.textContent || '0')) : 0;
 
         do {
             const articles = await page.$$('.result_article');
@@ -45,13 +48,13 @@ async function getData() {
                 }
 
                 result.push({
-                    title: await title.evaluate(x => x.textContent),
-                    ISWC: await ISWC.evaluate(x => x.textContent),
+                    title: await title?.evaluate(x => x.textContent),
+                    ISWC: await ISWC?.evaluate(x => x.textContent),
                     creators
                 });
             }
 
-            const arr = songs.concat(result);
+            const arr: Array<object> = songs.concat(result);
             songs = arr;
 
             console.log("Added content", songs.length, "/", total);
@@ -68,22 +71,20 @@ async function getData() {
                 return songs;
             }
         } while (true)
-    } catch (e) {
-        console.log('An error occurred', e);
+    }
+
+    async getFormattedData() {
+        const data = await this.getData();
+
+        return data.map((d: any) => {
+            const title = d.title.split(']').pop().split('-')[0].trim();
+            const workId = d.title.split(']').pop().split('-').pop().trim();
+
+            const creatorsString = d.creators.map((p: any) => p.trim()).sort().join(', ');
+
+            return { ISWC: d.ISWC, workId: workId, title: title, creators: creatorsString, source: 'KOMCA' }
+        });
     }
 }
 
-async function getFormattedData() {
-    const data = await getData();
-
-    return data.map(d => {
-        const title = d.title.split(']').pop().split('-')[0].trim();
-        const workId = d.title.split(']').pop().split('-').pop().trim();
-
-        const creatorsString = d.creators.map(p => p.trim()).sort().join(', ');
-
-        return { ISWC: d.ISWC, workId: workId, title: title, creators: creatorsString, source: 'KOMCA' }
-    });
-}
-
-module.exports = { getFormattedData };
+export default KOMCA;

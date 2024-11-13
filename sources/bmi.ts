@@ -57,7 +57,7 @@ class BMI extends BaseSource {
 
             console.log("Added content", songs.length, "/", total);
 
-            if (songs.length < total) {
+            if (total && songs.length < total) {
                 currentPage++;
 
                 await this.navigateToPage(page, this.url.replace('currentPage', currentPage.toString()))
