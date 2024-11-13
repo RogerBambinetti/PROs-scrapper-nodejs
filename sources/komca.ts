@@ -50,6 +50,7 @@ class KOMCA extends BaseSource {
                 result.push({
                     title: await title?.evaluate(x => x.textContent),
                     ISWC: await ISWC?.evaluate(x => x.textContent),
+                    workId: '',
                     creators
                 });
             }
