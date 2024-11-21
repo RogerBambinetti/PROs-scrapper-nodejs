@@ -71,22 +71,12 @@ class ASCAP extends BaseSource {
             }
         } while (true);
 
-        return songs;
-    }
-
-    async getFormattedData() {
-        const data = await this.getData();
-
-        return data.map((d: any) => {
-            const creators = d.interestedParties.filter((p: any) => p.roleCde === "W");
-            const creatorsString = creators.map((p: any) => p.fullName.trim()).sort().join(', ');
-
+        return songs.map((song: any) => {
             return {
-                ISWC: d.ISWCCde,
-                workId: d.workId,
-                title: d.workTitle,
-                creators: creatorsString,
-                source: 'ASCAP'
+                ISWC: song['ISWCCde'],
+                workId: song['workId'],
+                title: song['workTitle'],
+                creators: song.interestedParties.filter((p: any) => p.roleCde === "W").map((p: any) => p.fullName)
             };
         });
     }
