@@ -38,6 +38,7 @@ class ASCAP extends BaseSource {
             const button2 = await this.findButtonByText(page, 'Skip');
             await button2?.click();
 
+            await utils.addDelay();
             const mainContentButton = await page.$('.c-card__body');
             await mainContentButton?.click();
 
@@ -74,7 +75,7 @@ class ASCAP extends BaseSource {
         return songs.map((song: any) => {
             return {
                 ISWC: song['ISWCCde'],
-                workId: song['workId'],
+                workId: song['workId'].toString(),
                 title: song['workTitle'],
                 creators: song.interestedParties.filter((p: any) => p.roleCde === "W").map((p: any) => p.fullName)
             };
