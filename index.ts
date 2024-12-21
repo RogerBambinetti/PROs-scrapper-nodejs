@@ -10,7 +10,7 @@ async function init() {
     configDotenv();
 
     const currentDate = new Date();
-    const formattedDate = currentDate.getFullYear() + '.' + (currentDate.getMonth() + 1) + '.' + currentDate.getDate();
+    const formattedDate = `${currentDate.getFullYear()}.${currentDate.getMonth() + 1}.${currentDate.getDate()}`;
 
     const sources = fs.readdirSync('./sources').filter(source => source.includes('.ts'));
 
@@ -27,15 +27,20 @@ async function init() {
             console.log('---------------- STARTING SOURCE', moduleName.toUpperCase(), '----------------');
             const data = await module.getFormattedData();
 
+            let newDataAdded = false;
+
             for (const d of data) {
                 if (!csv.toString().includes(d.workId)) {
                     d.date = formattedDate;
                     oldData.push(d);
+                    newDataAdded = true;
                     console.log('New record', d);
                 }
             }
 
-            await util.writeFile(moduleName, oldData)
+            if (newDataAdded) {
+                await util.writeFile(moduleName, oldData);
+            }
         } catch (err) {
             console.log('ERROR', err)
         }
