@@ -15,7 +15,7 @@ class SGAE extends BaseSource {
             await page.waitForSelector('#pageSize');
             await page.select('#pageSize', '50');
 
-            await page.evaluate("document.querySelector('#strCreatorName').value = 'FURLER SIA'");
+            await page.evaluate(`document.querySelector('#strCreatorName').value = '${process.env.SEARCH_KEYWORDS}'`);
             await page.evaluate("document.querySelector('.busqueda').click()");
 
             await page.waitForSelector('#tablaPaginacion');

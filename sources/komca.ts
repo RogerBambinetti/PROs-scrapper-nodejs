@@ -12,7 +12,7 @@ class KOMCA extends BaseSource {
             const button1 = await page.$$('#foreign');
             await button1[0]?.click();
 
-            await page.type('#author', 'FURLER SIA');
+            await page.type('#author', process.env.SEARCH_KEYWORDS as string);
             await page.keyboard.press('Enter');
             await page.waitForNavigation();
 
