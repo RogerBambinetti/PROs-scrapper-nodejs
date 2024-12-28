@@ -50,7 +50,7 @@ class ASCAP extends BaseSource {
 
     async collectSongData(page: Page) {
         let songs: Array<object> = [];
-        await page.screenshot({ path: 'screenshot.png' });
+
         do {
             try {
                 const response = await page.waitForResponse(response =>
