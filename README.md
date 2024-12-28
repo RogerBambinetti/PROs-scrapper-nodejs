@@ -34,20 +34,6 @@ npm install
 npm start
 ```
 
-## Filters
-
-Filters must be configured as `jsonb` on the `snapshot` table. The filters bellow are available:
-
-```bash
-{
-    businessType: string, \\ ("venda", "aluguel")
-    propertyType: string, \\ ("casa", "apartamento")
-    bedrooms: integer,
-    bathrooms: integer,
-    parkingSpots: integer
-}
-```
-
 ## License
 
 This project is intended for learning purposes only and is not licensed for commercial use.
