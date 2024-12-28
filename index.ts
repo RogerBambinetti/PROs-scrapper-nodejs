@@ -21,24 +21,29 @@ async function init() {
 
             const module = new Module();
 
-            const csv = fs.readFileSync(`./logs/${moduleName}.csv`);
-            const oldData = parse(csv, { columns: true, delimiter: ';' });
-
             console.log('---------------- STARTING SOURCE', moduleName.toUpperCase(), '----------------');
+
             const data = await module.getFormattedData();
 
+            const logAlreadyExists = fs.existsSync(`./logs/${moduleName}.csv`);
+            let oldData = [];
             let newDataAdded = false;
 
-            for (const d of data) {
-                if (!csv.toString().includes(d.workId)) {
-                    d.date = formattedDate;
-                    oldData.push(d);
-                    newDataAdded = true;
-                    console.log('New record', d);
+            if (logAlreadyExists) {
+                const csv = fs.readFileSync(`./logs/${moduleName}.csv`);
+                oldData = parse(csv, { columns: true, delimiter: ';' });
+
+                for (const d of data) {
+                    if (!csv.toString().includes(d.workId)) {
+                        d.date = formattedDate;
+                        oldData.push(d);
+                        newDataAdded = true;
+                        console.log('New record', d);
+                    }
                 }
             }
 
-            if (newDataAdded) {
+            if (newDataAdded || !logAlreadyExists) {
                 await util.writeFile(moduleName, oldData);
             }
         } catch (err) {
