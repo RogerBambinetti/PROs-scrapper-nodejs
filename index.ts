@@ -26,7 +26,7 @@ async function init() {
             const data = await module.getFormattedData();
 
             const logAlreadyExists = fs.existsSync(`./logs/${moduleName}.csv`);
-            let oldData = [];
+            let oldData = data;
             let newDataAdded = false;
 
             if (logAlreadyExists) {

@@ -16,7 +16,8 @@ async function readFile(path: string) {
 async function writeFile(title: string, data: Array<object>) {
     const csv = await json2csv(data, { delimiter: { field: ';' } });
 
-    fs.writeFileSync(`./logs/${title}.csv`, csv);
+    fs.mkdirSync('./logs', { recursive: true });
+    fs.writeFileSync(`./logs/${title}.csv`, csv, { flag: 'wx' });
     console.log('Wrote file to disk');
 }
 
